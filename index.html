@@ -15,7 +15,7 @@
         rel="stylesheet" />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
@@ -84,8 +84,7 @@
                 <!-- Right Visual -->
                 <div class="hero-visual">
                     <div class="image-card">
-                        <img alt="Portrait de Moussa Traore"
-                            src="Photos/Mon%20identité.png" />
+                        <img alt="Portrait de Moussa Traore" src="Photos/photo1.JPG" />
                     </div>
                 </div>
             </div>
@@ -109,8 +108,7 @@
                 <div class="bento-grid">
                     <!-- Main Portrait -->
                     <div class="portrait-card">
-                        <img alt="Moussa Traore"
-                            src="Photos/Mon%20identité.png" />
+                        <img alt="Moussa Traore" src="Photos/photo1.JPG" />
                     </div>
 
                     <!-- Text Content -->
@@ -159,8 +157,7 @@
                 <!-- Header -->
                 <header class="skills-header">
                     <div class="profile-img-wrapper">
-                        <img alt="Moussa Traore"
-                            src="Photos/Mon%20identité.png" />
+                        <img alt="Moussa Traore" src="Photos/photo1.JPG" />
                     </div>
                     <div class="header-text">
                         <h2>Compétences Techniques</h2>
@@ -275,77 +272,26 @@
             <div class="container">
                 <!-- Header -->
                 <header class="section-header">
-                    <h2 class="headline-lg">Projets Sélectionnés</h2>
-                    <p class="body-lg">
-                        Une sélection de mes travaux récents, illustrant mon approche de la conception d'interfaces et
-                        du développement web, axée sur la clarté et la performance.
-                    </p>
+                    <div class="header-with-action">
+                        <div>
+                            <h2 class="headline-lg">Projets Sélectionnés</h2>
+                            <p class="body-lg">
+                                Une sélection de mes travaux récents, illustrant mon approche de la conception
+                                d'interfaces et
+                                du développement web, axée sur la clarté et la performance.
+                            </p>
+                        </div>
+                        <button id="btnManageProjects" class="btn btn-outline-cta">
+                            <span class="material-symbols-outlined">settings</span>
+                            Gérer
+                        </button>
+                    </div>
                 </header>
 
                 <!-- Projects Grid -->
-                <div class="projects-grid">
-                    <!-- Project 1 -->
-                    <article class="project-card">
-                        <div class="card-image-wrapper">
-                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfwN-32F90Le-7PUSKjFb7TkZuroKVJHoHHgDXD1ErfGXUSWgxPaP0YaKR1KYlAqkcBM62b16ntZUP3UJZTq1wLD1qXsO_y0b5G9lgUxAM3Q6W-BqFDE5zKyJ8nX1IrmBZfMlSknkt-1ZmyeCyG6msdaf5tV0zorpyrX8WmYbB-mqxg0siryakK-5EqjpAVNqU8asLtSbRONAoGIAGYQs1_IcdW2lSpiZgogQcqAZCdY-oyCkB7_mF7ro4QHFj1g8ZwCbJECUteF0"
-                                alt="FinTech Dashboard">
-                        </div>
-                        <div class="card-content">
-                            <div class="tags">
-                                <span class="tag">React</span>
-                                <span class="tag">Tailwind</span>
-                            </div>
-                            <h3 class="card-title-proj">FinTech Dashboard</h3>
-                            <p class="card-description">Interface d'analyse financière conçue pour offrir une lisibilité
-                                maximale des données complexes avec une navigation intuitive.</p>
-                            <a href="#" class="card-link">
-                                Voir l'étude de cas
-                                <span class="material-symbols-outlined">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
-
-                    <!-- Project 2 -->
-                    <article class="project-card">
-                        <div class="card-image-wrapper">
-                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQDilrRrpFPz8orWoOiECT4edam0rSSNZLD_us0LKp6MYxNCYrliOxBVPywMzRoECpq29XmegYN9mgc0HRyb7XGfjXuDOjCNMO5lnz1LAIVVkj3TgZu89Tsr_lFvGTFIulSazbk6ZujZ7MBcy2we8-gYhhGsmncpQ5IapM5_WVIz5XLCAKUVJSvPsYSstdrI1sSsl6CJK8wn8MaZ0VH2ZMLiu5xv9MYU6vY456EXarJiGlakccdLJ85EkE9bXeHA58qN-YtOKi74E"
-                                alt="E-commerce Premium">
-                        </div>
-                        <div class="card-content">
-                            <div class="tags">
-                                <span class="tag">Vue.js</span>
-                                <span class="tag">Figma</span>
-                            </div>
-                            <h3 class="card-title-proj">E-commerce Premium</h3>
-                            <p class="card-description">Refonte de l'expérience d'achat mobile pour une marque de luxe,
-                                avec un accent sur la fluidité des micro-interactions.</p>
-                            <a href="#" class="card-link">
-                                Voir le projet
-                                <span class="material-symbols-outlined">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
-
-                    <!-- Project 3 -->
-                    <article class="project-card">
-                        <div class="card-image-wrapper">
-                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTyrWaF-wjC_Ay0a7tzX50-xnGgYPnT_l9MGqUVONU8IpSXBPGROKEDlpoO555bl1WX_eAywxb1yrJXTNg0mdbbIvfptsKS287_u15gfqgsVuWpaFrYgDdLtgowpevY7fhPlFd5UzOW4ecgZGgtGPFA6c0mGbO9OO1NvRKVBepVigMcQHIoaeaKpN64n2hFKWotRgyCyqjMSDfo2wKIGZyrospT6RNiU4uP7iJ6CqVCxvR-yMgmsofoXmWEKhh8gr-i7FeXdiQk1s"
-                                alt="Architecture Système">
-                        </div>
-                        <div class="card-content">
-                            <div class="tags">
-                                <span class="tag">Node.js</span>
-                                <span class="tag">API</span>
-                            </div>
-                            <h3 class="card-title-proj">Architecture Système</h3>
-                            <p class="card-description">Conception d'une architecture backend robuste et évolutive pour
-                                supporter une plateforme SaaS à fort trafic.</p>
-                            <a href="#" class="card-link">
-                                Voir les détails techniques
-                                <span class="material-symbols-outlined">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Les projets seront chargés dynamiquement ici -->
+                    <div class="loading-spinner">Chargement des projets...</div>
                 </div>
 
                 <!-- Teaser Section -->
@@ -360,8 +306,7 @@
                         <a href="#apropos" class="btn-teaser">Découvrir mon parcours</a>
                     </div>
                     <div class="teaser-image">
-                        <img src="Photos/Mon%20identité2.png"
-                            alt="Portrait Moussa Traore">
+                        <img src="Photos/photo2.JPG" alt="Portrait Moussa Traore">
                     </div>
                 </div>
             </div>
@@ -406,8 +351,7 @@
                     </div>
 
                     <div class="contact-portrait">
-                        <img src="Photos/Mon%20identité2.png"
-                            alt="Moussa Traore" class="portrait-img">
+                        <img src="Photos/photo2.JPG" alt="Moussa Traore" class="portrait-img">
                         <p class="location-text">Basé à Conakry, disponible dans le monde entier.</p>
                     </div>
                 </div>
@@ -432,9 +376,45 @@
         </div>
     </footer>
 
+    <!-- ===== MODAL ADMIN PROJETS ===== -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ajouter un Projet</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="title">Titre du projet</label>
+                    <input type="text" id="title" required placeholder="Ex: Dashboard FinTech">
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl">URL de l'image</label>
+                    <input type="text" id="imageUrl" required placeholder="Ex: Photos/projet1.png">
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags (séparés par des virgules)</label>
+                    <input type="text" id="tags" placeholder="Ex: React, Node.js, UI/UX">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3" required placeholder="Décrivez votre projet..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="link">Lien du projet</label>
+                    <input type="text" id="link" placeholder="Ex: https://monprojet.com">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">Annuler</button>
+                    <button type="submit" class="btn btn-filled">Enregistrer le projet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="Particles.js"></script>
-    <script src="main.js"></script>
+    <script src="js/Particles.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

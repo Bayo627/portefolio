@@ -156,4 +156,150 @@ document.addEventListener('DOMContentLoaded', function () {
         revealTargets.forEach(function (el) { el.classList.add('reveal', 'visible'); });
     }
 
+    /* -----------------------------------------------
+       7. GESTION DYNAMIQUE DES PROJETS (MySQL)
+    ----------------------------------------------- */
+    const API_URL = 'http://localhost:5000/api/projects';
+    const projectsGrid = document.getElementById('projectsGrid');
+    const projectModal = document.getElementById('projectModal');
+    const projectForm = document.getElementById('projectForm');
+    const btnManage = document.getElementById('btnManageProjects');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    // Charger les projets depuis l'API
+    async function loadProjects() {
+        if (!projectsGrid) return;
+        
+        try {
+            const response = await fetch(API_URL);
+            const projects = await response.json();
+            renderProjects(projects);
+        } catch (error) {
+            console.error('Erreur lors du chargement des projets:', error);
+            projectsGrid.innerHTML = `
+                <div class="error-msg" style="grid-column: 1/-1; text-align: center; color: #ff6b6b; padding: 2rem; background: rgba(255,107,107,0.1); border-radius: 1rem;">
+                    <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem;">database_off</span>
+                    <p>Impossible de se connecter au serveur MySQL.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Vérifiez que le backend Node.js est lancé sur le port 5000.</p>
+                </div>`;
+        }
+    }
+
+    // Afficher les projets dans le DOM
+    function renderProjects(projects) {
+        if (!projects || projects.length === 0) {
+            projectsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">Aucun projet trouvé.</p>';
+            return;
+        }
+
+        projectsGrid.innerHTML = '';
+        projects.forEach(project => {
+            const tagsHtml = project.tags 
+                ? project.tags.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join('') 
+                : '';
+
+            const article = document.createElement('article');
+            article.className = 'project-card reveal visible'; 
+            article.innerHTML = `
+                <button class="delete-btn" data-id="${project.id}" title="Supprimer le projet">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+                <div class="card-image-wrapper">
+                    <img src="${project.image_url}" alt="${project.title}" onerror="this.src='https://placehold.co/600x400/0f172a/64ffda?text=Image+indisponible'">
+                </div>
+                <div class="card-content">
+                    <div class="tags">${tagsHtml}</div>
+                    <h3 class="card-title-proj">${project.title}</h3>
+                    <p class="card-description">${project.description}</p>
+                    <a href="${project.link || '#'}" class="card-link" target="_blank">
+                        Voir le projet
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+            `;
+            projectsGrid.appendChild(article);
+        });
+
+        // Ajouter les écouteurs pour la suppression
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.dataset.id;
+                if(confirm('Voulez-vous vraiment supprimer ce projet ?')) {
+                    deleteProject(id);
+                }
+            });
+        });
+    }
+
+    // Ajouter un projet
+    if (projectForm) {
+        projectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const projectData = {
+                title: document.getElementById('title').value,
+                image_url: document.getElementById('imageUrl').value,
+                tags: document.getElementById('tags').value,
+                description: document.getElementById('description').value,
+                link: document.getElementById('link').value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(projectData)
+                });
+
+                if (response.ok) {
+                    projectForm.reset();
+                    projectModal.classList.remove('active');
+                    loadProjects();
+                } else {
+                    alert('Erreur lors de l\'ajout du projet.');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        });
+    }
+
+    // Supprimer un projet
+    async function deleteProject(id) {
+        try {
+            const response = await fetch(\`\${API_URL}/\${id}\`, { method: 'DELETE' });
+            if (response.ok) {
+                loadProjects();
+            } else {
+                alert('Erreur lors de la suppression.');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
+    }
+
+    // Modal UI Controls
+    if (btnManage) {
+        btnManage.addEventListener('click', () => projectModal.classList.add('active'));
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener('click', () => projectModal.classList.remove('active'));
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => projectModal.classList.remove('active'));
+    }
+
+    // Fermer au clic en dehors
+    window.addEventListener('click', (e) => {
+        if (e.target === projectModal) projectModal.classList.remove('active');
+    });
+
+    // Initialisation
+    loadProjects();
+
+
 });
