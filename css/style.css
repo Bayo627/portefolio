@@ -544,8 +544,11 @@ img {
 .skills-header {
     margin-bottom: var(--stack-lg);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--gutter);
+    text-align: center;
+    gap: 1.25rem;
+    width: 100%;
 }
 
 .profile-img-wrapper {
@@ -561,6 +564,12 @@ img {
     object-fit: cover;
 }
 
+.header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .header-text h2 {
     font-size: 40px;
     font-weight: 600;
@@ -572,6 +581,7 @@ img {
     font-size: 16px;
     color: var(--on-surface-variant);
     max-width: 42rem;
+    margin: 0 auto;
 }
 
 .skills-grid {
@@ -662,14 +672,19 @@ img {
    ============================================ */
 .section-header {
     margin-bottom: var(--stack-lg);
-    max-width: 100%;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .header-with-action {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -836,7 +851,7 @@ img {
     padding: 6px;
     border-radius: 6px;
     cursor: pointer;
-    display: none; /* Visible via JS */
+    display: none; /* Toujours masqué par défaut */
     z-index: 10;
     transition: background 0.2s;
 }
@@ -845,7 +860,7 @@ img {
     background: rgb(220, 38, 38);
 }
 
-.project-card:hover .delete-btn {
+body.admin-mode .project-card:hover .delete-btn {
     display: block;
 }
 
@@ -869,12 +884,14 @@ img {
 .modal-content {
     background: var(--surface-container-low);
     width: 100%;
-    max-width: 550px;
+    max-width: 600px;
     border-radius: 1.5rem;
     border: 1px solid var(--outline-variant);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     padding: 2rem;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
     animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -887,12 +904,37 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .modal-header h3 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--primary);
+    margin: 0;
+}
+
+.storage-badge {
+    display: inline-block;
+    align-self: flex-start;
+    background: rgba(100, 255, 218, 0.1);
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.storage-badge.local-mode {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.2);
 }
 
 .close-modal {
@@ -906,7 +948,19 @@ img {
 #projectForm {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 600px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
 }
 
 .form-group {
@@ -916,7 +970,7 @@ img {
 }
 
 .form-group label {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     color: var(--on-surface-variant);
 }
@@ -929,11 +983,84 @@ img {
     color: var(--on-surface);
     font-family: inherit;
     transition: border-color 0.2s;
+    font-size: 0.9rem;
 }
 
 .form-group input:focus, .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
+}
+
+/* Custom File Upload Styling */
+.file-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+.file-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(100, 255, 218, 0.05);
+    border: 1px dashed var(--primary);
+    color: var(--primary);
+    padding: 0.7rem 1rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.file-upload-btn:hover {
+    background: rgba(100, 255, 218, 0.12);
+}
+
+.file-upload-btn-secondary {
+    border-color: var(--secondary);
+    color: var(--secondary);
+    background: rgba(195, 198, 209, 0.03);
+}
+
+.file-upload-btn-secondary:hover {
+    background: rgba(195, 198, 209, 0.08);
+}
+
+.file-name-display {
+    font-size: 0.75rem;
+    color: var(--on-surface-variant);
+    margin-top: 2px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Image Preview */
+.image-upload-preview {
+    margin: 0.5rem 0;
+    text-align: center;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    max-height: 160px;
+    border: 1px solid var(--outline-variant);
+    background: var(--surface-container-low);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-upload-preview img {
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: contain;
 }
 
 .modal-actions {
@@ -1401,4 +1528,310 @@ img {
     .footer-socials { gap: 0.75rem; }
 
     .btn-teaser { width: 100%; text-align: center; }
+}
+
+/* ============================================
+   PREMIUM HIGH-TECH VISUAL REPLACEMENTS
+   ============================================ */
+
+/* ── À propos: code mockup card ── */
+.dynamic-tech-visual {
+    background: radial-gradient(circle at top right, #0f172a, #020617) !important;
+    padding: 1.5rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mockup-frame {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(100, 255, 218, 0.15);
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    text-align: left;
+}
+.mockup-header {
+    display: flex;
+    align-items: center;
+    background: rgba(2, 6, 23, 0.85);
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    gap: 6px;
+}
+.mockup-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.mockup-dot.red { background: #ef4444; }
+.mockup-dot.yellow { background: #f59e0b; }
+.mockup-dot.green { background: #10b981; }
+.mockup-title {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 11px;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+}
+.mockup-code {
+    padding: 1.5rem;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #e2e8f0;
+    overflow-x: auto;
+    margin: 0;
+}
+.mockup-code .keyword { color: #f43f5e; font-weight: 600; }
+.mockup-code .string { color: #64ffda; }
+.mockup-code .comment { color: #64748b; font-style: italic; }
+
+/* ── Compétences: Terminal Stack Icon ── */
+.technical-stack-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: rgba(100, 255, 218, 0.03) !important;
+    border: 3px solid var(--primary-fixed) !important;
+    box-shadow: 0 0 30px rgba(100, 255, 218, 0.04);
+}
+
+/* ── Teaser: Dynamic design workspace card ── */
+.design-mockup-visual {
+    background: radial-gradient(circle at center, #0f172a, #020617) !important;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.design-workspace {
+    position: relative;
+    width: 85%;
+    height: 85%;
+    border: 1px solid rgba(148, 163, 184, 0.08);
+    border-radius: 16px;
+    background: rgba(30, 41, 59, 0.15);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.workspace-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 0);
+    background-size: 16px 16px;
+    opacity: 0.6;
+}
+.floating-layer {
+    position: absolute;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-family: monospace;
+    font-size: 10px;
+    color: #94a3b8;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    text-align: left;
+}
+.floating-layer:hover {
+    border-color: var(--primary);
+    transform: translateY(-4px) scale(1.02);
+}
+.floating-layer.f1 {
+    top: 12%;
+    left: 8%;
+    width: 130px;
+}
+.floating-layer.f2 {
+    bottom: 12%;
+    left: 15%;
+    width: 120px;
+}
+.floating-layer.f3 {
+    top: 25%;
+    right: 8%;
+    width: 150px;
+}
+.floating-layer .label {
+    display: block;
+    color: var(--primary);
+    margin-bottom: 6px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding-bottom: 4px;
+}
+.mock-line {
+    height: 3px;
+    background: rgba(148, 163, 184, 0.15);
+    margin-bottom: 5px;
+    border-radius: 2px;
+}
+.mock-line.long { width: 85%; }
+.mock-line.short { width: 50%; }
+.mock-color-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+.color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.mock-wireframe {
+    display: flex;
+    gap: 6px;
+    margin-top: 5px;
+}
+.mock-wireframe .box {
+    flex: 1;
+    height: 24px;
+    background: rgba(148, 163, 184, 0.05);
+    border: 1px dashed rgba(148, 163, 184, 0.15);
+    border-radius: 4px;
+}
+
+/* ── Contact: Pulsing Globe Wrapper ── */
+.contact-globe-wrapper {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(100, 255, 218, 0.04);
+    border: 1px solid rgba(100, 255, 218, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+    position: relative;
+}
+.contact-globe-wrapper .map-icon {
+    font-size: 3rem !important;
+    color: var(--primary);
+    z-index: 2;
+}
+.pulse-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+    animation: globePulse 2.5s infinite ease-out;
+    z-index: 1;
+    opacity: 0;
+}
+@keyframes globePulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+/* ── Formulaire de Contact Premium ── */
+.contact-form-premium {
+    width: 100%;
+    max-width: 650px;
+    background: var(--surface-container-low);
+    border: 1px solid var(--outline-variant);
+    border-radius: 1.25rem;
+    padding: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    text-align: left;
+}
+
+.form-row-contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .form-row-contact {
+        grid-template-columns: 1fr;
+    }
+    .contact-form-premium {
+        padding: 1.5rem;
+    }
+}
+
+.form-group-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-contact label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.form-group-contact input,
+.form-group-contact textarea {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    color: var(--on-background);
+    font-family: var(--font-main);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group-contact input:focus,
+.form-group-contact textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
+}
+
+.submit-contact-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.direct-contact-divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 650px;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.direct-contact-divider::before,
+.direct-contact-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--outline-variant);
+}
+
+.divider-text {
+    padding: 0 1rem;
+    font-size: 11px;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }

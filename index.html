@@ -84,7 +84,7 @@
                 <!-- Right Visual -->
                 <div class="hero-visual">
                     <div class="image-card">
-                        <img alt="Portrait de Moussa Traore" src="Photos/photo1.JPG" />
+                        <img alt="Portrait de Moussa Traore" src="Photos/photo2.JPG" />
                     </div>
                 </div>
             </div>
@@ -106,9 +106,29 @@
 
                 <!-- Bento Grid Content -->
                 <div class="bento-grid">
-                    <!-- Main Portrait -->
-                    <div class="portrait-card">
-                        <img alt="Moussa Traore" src="Photos/photo1.JPG" />
+                    <!-- Dynamic Isometric Code Mockup -->
+                    <div class="portrait-card dynamic-tech-visual">
+                        <div class="mockup-frame">
+                            <div class="mockup-header">
+                                <span class="mockup-dot red"></span>
+                                <span class="mockup-dot yellow"></span>
+                                <span class="mockup-dot green"></span>
+                                <span class="mockup-title">traore_moussa.js</span>
+                            </div>
+                            <pre class="mockup-code"><code><span class="keyword">const</span> developer = {
+  name: <span class="string">"Moussa Traore"</span>,
+  role: <span class="string">"MIAGE Student"</span>,
+  skills: [
+    <span class="string">"React"</span>, <span class="string">"Node.js"</span>,
+    <span class="string">"MySQL"</span>, <span class="string">"UI/UX"</span>
+  ],
+  passion: <span class="string">"Clean Code"</span>,
+  loc: <span class="string">"Conakry"</span>
+};
+
+<span class="comment">// Designing future...</span>
+developer.buildWorld();</code></pre>
+                        </div>
                     </div>
 
                     <!-- Text Content -->
@@ -116,21 +136,28 @@
                         <h3 class="headline-md">Mon Parcours</h3>
                         <div class="about-text">
                             <p>
-                                Je suis Moussa Traore, étudiant en MIAGE à l'Université de Labé. Passionné par le
-                                développement web et le design d'interfaces, je conçois des solutions digitales
-                                modernes.
+                                Je suis Moussa Traoré, développeur web passionné par la création de solutions modernes,
+                                performantes et bien structurées. Je me concentre principalement sur le développement
+                                d’applications et d’interfaces web robustes, conçues pour être rapides, fiables et
+                                faciles à utiliser.
                             </p>
                             <p>
-                                Mon approche allie une rigueur technique approfondie à une sensibilité esthétique forte,
-                                fortement influencée par les principes du design minimaliste. Je crois fermement que les
-                                meilleures interfaces sont celles qui s'effacent pour laisser place au contenu, guidant
-                                l'utilisateur de manière intuitive.
+                                Mon approche repose sur une solide base technique, associée à une attention particulière
+                                à la qualité
+                                du code et à l’expérience utilisateur. J’accorde une grande importance à la clarté, à la
+                                performance
+                                et à la maintenabilité dans chacun de mes projets.
                             </p>
                             <p>
-                                Toujours à la recherche de nouveaux défis, j'explore continuellement les dernières
-                                technologies pour affiner mes compétences et proposer des expériences utilisateur de
-                                haute
-                                qualité, alliant performance et élégance visuelle.
+                                Inspiré par le design minimaliste, je privilégie des interfaces simples, efficaces et
+                                orientées
+                                vers l’essentiel, afin d’offrir une navigation fluide et intuitive.
+                            </p>
+                            <p>
+                                Toujours en évolution, j’améliore constamment mes compétences en explorant de nouvelles
+                                technologies
+                                et en relevant des défis techniques pour concevoir des solutions web modernes et
+                                adaptées aux besoins réels.
                             </p>
                         </div>
 
@@ -156,8 +183,9 @@
             <div class="container">
                 <!-- Header -->
                 <header class="skills-header">
-                    <div class="profile-img-wrapper">
-                        <img alt="Moussa Traore" src="Photos/photo1.JPG" />
+                    <div class="profile-img-wrapper technical-stack-icon">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 3rem; color: var(--primary);">terminal</span>
                     </div>
                     <div class="header-text">
                         <h2>Compétences Techniques</h2>
@@ -204,6 +232,33 @@
                                 </div>
                                 <div class="progress-track">
                                     <div class="progress-fill" style="width: 0%;" data-width="60%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-item-info">
+                                    <span class="skill-name">React</span>
+                                    <span class="skill-percentage">80%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: 0%;" data-width="80%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-item-info">
+                                    <span class="skill-name">Node.js</span>
+                                    <span class="skill-percentage">65%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: 0%;" data-width="65%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-item-info">
+                                    <span class="skill-name">MySQL</span>
+                                    <span class="skill-percentage">70%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: 0%;" data-width="70%"></div>
                                 </div>
                             </div>
                         </div>
@@ -281,10 +336,6 @@
                                 du développement web, axée sur la clarté et la performance.
                             </p>
                         </div>
-                        <button id="btnManageProjects" class="btn btn-outline-cta">
-                            <span class="material-symbols-outlined">settings</span>
-                            Gérer
-                        </button>
                     </div>
                 </header>
 
@@ -305,8 +356,31 @@
                         </p>
                         <a href="#apropos" class="btn-teaser">Découvrir mon parcours</a>
                     </div>
-                    <div class="teaser-image">
-                        <img src="Photos/photo2.JPG" alt="Portrait Moussa Traore">
+                    <!-- Dynamic Isometric Design Workspace Mockup -->
+                    <div class="teaser-image design-mockup-visual">
+                        <div class="design-workspace">
+                            <div class="workspace-grid"></div>
+                            <div class="floating-layer f1">
+                                <span class="label">Header.jsx</span>
+                                <div class="mock-line long"></div>
+                                <div class="mock-line short"></div>
+                            </div>
+                            <div class="floating-layer f2">
+                                <span class="label">Theme.css</span>
+                                <div class="mock-color-row">
+                                    <span class="color-dot" style="background:#64ffda;"></span>
+                                    <span class="color-dot" style="background:#020617;"></span>
+                                    <span class="color-dot" style="background:#1e293b;"></span>
+                                </div>
+                            </div>
+                            <div class="floating-layer f3">
+                                <span class="label">Dashboard.sketch</span>
+                                <div class="mock-wireframe">
+                                    <span class="box"></span>
+                                    <span class="box"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -331,12 +405,35 @@
                         </p>
                     </div>
 
-                    <div class="actions-grid">
-                        <a href="mailto:kankanbayo627@mail.com" class="btn btn-primary-cta">
+                    <!-- Formulaire de Contact Direct -->
+                    <form id="contactForm" class="contact-form-premium">
+                        <div class="form-row-contact">
+                            <div class="form-group-contact">
+                                <label for="contactName">Votre Nom</label>
+                                <input type="text" id="contactName" required placeholder="Ex: Moussa Traore">
+                            </div>
+                            <div class="form-group-contact">
+                                <label for="contactEmail">Votre Adresse E-mail</label>
+                                <input type="email" id="contactEmail" required placeholder="Ex: kankanbayo627@mail.com">
+                            </div>
+                        </div>
+                        <div class="form-group-contact">
+                            <label for="contactMessage">Votre Message</label>
+                            <textarea id="contactMessage" rows="5" required
+                                placeholder="Bonjour Moussa, je souhaiterais échanger avec vous sur..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-filled submit-contact-btn">
                             <span class="material-symbols-outlined"
                                 style="font-variation-settings: 'FILL' 0;">send</span>
-                            Envoyer un Email
-                        </a>
+                            Envoyer le message
+                        </button>
+                    </form>
+
+                    <div class="direct-contact-divider">
+                        <span class="divider-text">Ou me joindre directement</span>
+                    </div>
+
+                    <div class="actions-grid">
                         <a href="https://wa.me/224627995550" class="btn btn-outline-cta" target="_blank"
                             rel="noopener noreferrer">
                             <span class="material-symbols-outlined"
@@ -351,7 +448,10 @@
                     </div>
 
                     <div class="contact-portrait">
-                        <img src="Photos/photo2.JPG" alt="Moussa Traore" class="portrait-img">
+                        <div class="contact-globe-wrapper">
+                            <div class="pulse-ring"></div>
+                            <span class="material-symbols-outlined map-icon">public</span>
+                        </div>
                         <p class="location-text">Basé à Conakry, disponible dans le monde entier.</p>
                     </div>
                 </div>
@@ -380,33 +480,76 @@
     <div id="projectModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Ajouter un Projet</h3>
+                <div class="modal-title-group">
+                    <h3>Stocker un Projet Réalisé</h3>
+                    <div id="adminStorageBadge" class="storage-badge">Détection du mode...</div>
+                </div>
                 <button class="close-modal" id="closeModal">&times;</button>
             </div>
-            <form id="projectForm">
+            <form id="projectForm" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Titre du projet</label>
-                    <input type="text" id="title" required placeholder="Ex: Dashboard FinTech">
+                    <input type="text" id="title" required placeholder="Ex: Dashboard FinTech ou Mon Site Web">
                 </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="imageFile">Téléverser une image (Visuel)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="imageFile" accept="image/*" class="file-input-hidden">
+                            <label for="imageFile" class="file-upload-btn">
+                                <span class="material-symbols-outlined">add_photo_alternate</span>
+                                Choisir une image
+                            </label>
+                            <span id="imageFileName" class="file-name-display">Aucun fichier</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">Ou coller l'URL d'une image</label>
+                        <input type="text" id="imageUrl" placeholder="Ex: Photos/projet1.png">
+                    </div>
+                </div>
+
+                <div class="image-upload-preview" id="imagePreview" style="display: none;">
+                    <img src="" alt="Aperçu">
+                </div>
+
                 <div class="form-group">
-                    <label for="imageUrl">URL de l'image</label>
-                    <input type="text" id="imageUrl" required placeholder="Ex: Photos/projet1.png">
+                    <label for="tags">Tags / Technologies (séparés par des virgules)</label>
+                    <input type="text" id="tags" placeholder="Ex: React, Node.js, UI/UX, MySQL">
                 </div>
+
                 <div class="form-group">
-                    <label for="tags">Tags (séparés par des virgules)</label>
-                    <input type="text" id="tags" placeholder="Ex: React, Node.js, UI/UX">
+                    <label for="description">Description du projet</label>
+                    <textarea id="description" rows="3" required
+                        placeholder="Expliquez ce que vous avez réalisé dans ce projet..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" rows="3" required placeholder="Décrivez votre projet..."></textarea>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="projectFile">Téléverser un fichier du projet (ZIP, PDF, etc.)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="projectFile" accept=".zip,.rar,.pdf,.doc,.docx"
+                                class="file-input-hidden">
+                            <label for="projectFile" class="file-upload-btn file-upload-btn-secondary">
+                                <span class="material-symbols-outlined">attach_file</span>
+                                Choisir un fichier
+                            </label>
+                            <span id="projectFileName" class="file-name-display">Aucun fichier</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link">Ou coller le lien du projet (Lien externe)</label>
+                        <input type="text" id="link" placeholder="Ex: https://github.com/mon-projet">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="link">Lien du projet</label>
-                    <input type="text" id="link" placeholder="Ex: https://monprojet.com">
-                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline" id="cancelBtn">Annuler</button>
-                    <button type="submit" class="btn btn-filled">Enregistrer le projet</button>
+                    <button type="submit" class="btn btn-filled">
+                        <span class="material-symbols-outlined" style="font-size: 1.2rem;">cloud_upload</span>
+                        Stocker le projet
+                    </button>
                 </div>
             </form>
         </div>

@@ -157,37 +157,234 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* -----------------------------------------------
-       7. GESTION DYNAMIQUE DES PROJETS (MySQL)
+       7. GESTION SECRÈTE DES PROJETS (MySQL & LocalStorage)
     ----------------------------------------------- */
     const API_URL = 'http://localhost:5000/api/projects';
     const projectsGrid = document.getElementById('projectsGrid');
     const projectModal = document.getElementById('projectModal');
     const projectForm = document.getElementById('projectForm');
-    const btnManage = document.getElementById('btnManageProjects');
     const closeModal = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
+    
+    // Inputs formulaire
+    const imageFileInput = document.getElementById('imageFile');
+    const imageFileNameDisplay = document.getElementById('imageFileName');
+    const imageUrlInput = document.getElementById('imageUrl');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewImg = imagePreview ? imagePreview.querySelector('img') : null;
 
-    // Charger les projets depuis l'API
+    const projectFileInput = document.getElementById('projectFile');
+    const projectFileNameDisplay = document.getElementById('projectFileName');
+    const projectLinkInput = document.getElementById('link');
+
+    const adminStorageBadge = document.getElementById('adminStorageBadge');
+
+    let useLocalStorage = false;
+    let isAdminActive = false;
+
+    // Helper de compression client via Canvas (redimensionne à 800px max, compresse à 80% JPEG)
+    function compressImage(file, maxWidth = 800, maxHeight = 600, quality = 0.8) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                    
+                    canvas.toBlob((blob) => {
+                        resolve({ dataUrl: compressedDataUrl, blob: blob });
+                    }, 'image/jpeg', quality);
+                };
+            };
+        });
+    }
+
+    // Projets par défaut si localstorage vide
+    const DEFAULT_PROJECTS = [
+        {
+            id: 'default-1',
+            title: 'FinTech Dashboard',
+            description: "Interface d'analyse financière conçue pour offrir une lisibilité maximale des données complexes avec une navigation intuitive.",
+            image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDfwN-32F90Le-7PUSKjFb7TkZuroKVJHoHHgDXD1ErfGXUSWgxPaP0YaKR1KYlAqkcBM62b16ntZUP3UJZTq1wLD1qXsO_y0b5G9lgUxAM3Q6W-BqFDE5zKyJ8nX1IrmBZfMlSknkt-1ZmyeCyG6msdaf5tV0zorpyrX8WmYbB-mqxg0siryakK-5EqjpAVNqU8asLtSbRONAoGIAGYQs1_IcdW2lSpiZgogQcqAZCdY-oyCkB7_mF7ro4QHFj1g8ZwCbJECUteF0',
+            tags: 'React,Tailwind',
+            link: '#'
+        },
+        {
+            id: 'default-2',
+            title: 'E-commerce Premium',
+            description: "Refonte de l'expérience d'achat mobile pour une marque de luxe, avec un accent sur la fluidité des micro-interactions.",
+            image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQDilrRrpFPz8orWoOiECT4edam0rSSNZLD_us0LKp6MYxNCYrliOxBVPywMzRoECpq29XmegYN9mgc0HRyb7XGfjXuDOjCNMO5lnz1LAIVVkj3TgZu89Tsr_lFvGTFIulSazbk6ZujZ7MBcy2we8-gYhhGsmncpQ5IapM5_WVIz5XLCAKUVJSvPsYSstdrI1sSsl6CJK8wn8MaZ0VH2ZMLiu5xv9MYU6vY456EXarJiGlakccdLJ85EkE9bXeHA58qN-YtOKi74E',
+            tags: 'Vue.js,Figma',
+            link: '#'
+        },
+        {
+            id: 'default-3',
+            title: 'Architecture Système',
+            description: "Conception d'une architecture backend robuste et évolutive pour supporter une plateforme SaaS à fort trafic.",
+            image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTyrWaF-wjC_Ay0a7tzX50-xnGgYPnT_l9MGqUVONU8IpSXBPGROKEDlpoO555bl1WX_eAywxb1yrJXTNg0mdbbIvfptsKS287_u15gfqgsVuWpaFrYgDdLtgowpevY7fhPlFd5UzOW4ecgZGgtGPFA6c0mGbO9OO1NvRKVBepVigMcQHIoaeaKpN64n2hFKWotRgyCyqjMSDfo2wKIGZyrospT6RNiU4uP7iJ6CqVCxvR-yMgmsofoXmWEKhh8gr-i7FeXdiQk1s',
+            tags: 'Node.js,API',
+            link: '#'
+        }
+    ];
+
+    // Détection du mode d'accès Administrateur Secret
+    function checkAdminAccess() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('admin')) {
+            enableAdminMode();
+        }
+    }
+
+    function enableAdminMode() {
+        if (isAdminActive) return;
+        isAdminActive = true;
+        document.body.classList.add('admin-mode');
+        console.log("Mode Administrateur activé ! Vous pouvez maintenant gérer vos projets.");
+        
+        // Notification toast ou message dans la console pour l'utilisateur
+        showNotification("Mode Administration activé. Survolez les projets pour les supprimer ou Ctrl+Shift+A pour en stocker un.");
+    }
+
+    function showNotification(message) {
+        let toast = document.getElementById('adminToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'adminToast';
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px;
+                background: rgba(15, 23, 42, 0.95);
+                color: var(--primary);
+                border: 1px solid var(--primary);
+                padding: 1rem 1.5rem;
+                border-radius: var(--radius-xl);
+                z-index: 9999;
+                font-family: inherit; font-size: 0.9rem;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+                backdrop-filter: blur(8px);
+                transition: opacity 0.3s ease;
+                display: flex; align-items: center; gap: 0.5rem;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<span class="material-symbols-outlined">admin_panel_settings</span> ${message}`;
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, 5000);
+    }
+
+    // Détecteur de raccourci clavier : Ctrl + Shift + A
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+            e.preventDefault();
+            enableAdminMode();
+            if (projectModal) {
+                projectModal.classList.add('active');
+                updateModalStorageBadge();
+            }
+        }
+    });
+
+    // Mettre à jour le badge de statut de stockage dans le modal
+    function updateModalStorageBadge() {
+        if (!adminStorageBadge) return;
+        if (useLocalStorage) {
+            adminStorageBadge.textContent = "Stockage : Navigateur (Local)";
+            adminStorageBadge.className = "storage-badge local-mode";
+        } else {
+            adminStorageBadge.textContent = "Stockage : Base de données (MySQL)";
+            adminStorageBadge.className = "storage-badge";
+        }
+    }
+
+    // Gestion de l'aperçu de l'image sélectionnée et affichage du nom
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                if (imageFileNameDisplay) imageFileNameDisplay.textContent = file.name;
+                
+                // Prévisualiser
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (imagePreviewImg) imagePreviewImg.src = e.target.result;
+                    if (imagePreview) imagePreview.style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if (imageFileNameDisplay) imageFileNameDisplay.textContent = "Aucun fichier";
+                if (imagePreview) imagePreview.style.display = 'none';
+            }
+        });
+    }
+
+    // Gestion de l'affichage du nom du fichier de projet
+    if (projectFileInput) {
+        projectFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                if (projectFileNameDisplay) projectFileNameDisplay.textContent = file.name;
+            } else {
+                if (projectFileNameDisplay) projectFileNameDisplay.textContent = "Aucun fichier";
+            }
+        });
+    }
+
+    // Charger les projets depuis l'API ou LocalStorage en cas d'erreur
     async function loadProjects() {
         if (!projectsGrid) return;
         
         try {
             const response = await fetch(API_URL);
+            if (!response.ok) throw new Error("Erreur de serveur");
+            
             const projects = await response.json();
+            useLocalStorage = false;
             renderProjects(projects);
         } catch (error) {
-            console.error('Erreur lors du chargement des projets:', error);
-            projectsGrid.innerHTML = `
-                <div class="error-msg" style="grid-column: 1/-1; text-align: center; color: #ff6b6b; padding: 2rem; background: rgba(255,107,107,0.1); border-radius: 1rem;">
-                    <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem;">database_off</span>
-                    <p>Impossible de se connecter au serveur MySQL.</p>
-                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Vérifiez que le backend Node.js est lancé sur le port 5000.</p>
-                </div>`;
+            console.warn('Impossible de joindre le serveur MySQL. Basculement sur LocalStorage :', error.message);
+            useLocalStorage = true;
+            
+            // Récupérer depuis localStorage
+            let localProjects = localStorage.getItem('portfolio_projects');
+            if (!localProjects) {
+                // Initialiser avec les projets par défaut si vide
+                localStorage.setItem('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS));
+                localProjects = JSON.stringify(DEFAULT_PROJECTS);
+            }
+            
+            renderProjects(JSON.parse(localProjects));
         }
     }
 
     // Afficher les projets dans le DOM
     function renderProjects(projects) {
+        if (!projectsGrid) return;
+        
         if (!projects || projects.length === 0) {
             projectsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">Aucun projet trouvé.</p>';
             return;
@@ -199,6 +396,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 ? project.tags.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join('') 
                 : '';
 
+            // Détecter si le lien est un fichier joint téléversé (archive source, PDF, etc.)
+            const isFile = project.link && (
+                project.link.includes('/uploads/') && (
+                    project.link.toLowerCase().endsWith('.zip') || 
+                    project.link.toLowerCase().endsWith('.rar') || 
+                    project.link.toLowerCase().endsWith('.pdf') || 
+                    project.link.toLowerCase().endsWith('.doc') || 
+                    project.link.toLowerCase().endsWith('.docx')
+                ) || 
+                project.link.startsWith('data:application/') ||
+                project.link.startsWith('data:image/')
+            );
+
+            const linkText = isFile ? 'Télécharger les sources' : 'Voir le projet';
+            const linkIcon = isFile ? 'download' : 'arrow_forward';
+            const downloadAttr = isFile ? 'download' : '';
+
             const article = document.createElement('article');
             article.className = 'project-card reveal visible'; 
             article.innerHTML = `
@@ -206,85 +420,161 @@ document.addEventListener('DOMContentLoaded', function () {
                     <span class="material-symbols-outlined">delete</span>
                 </button>
                 <div class="card-image-wrapper">
-                    <img src="${project.image_url}" alt="${project.title}" onerror="this.src='https://placehold.co/600x400/0f172a/64ffda?text=Image+indisponible'">
+                    <img src="${project.image_url}" alt="${project.title}" loading="lazy" onerror="this.src='https://placehold.co/600x400/0f172a/64ffda?text=Image+indisponible'">
                 </div>
                 <div class="card-content">
                     <div class="tags">${tagsHtml}</div>
                     <h3 class="card-title-proj">${project.title}</h3>
                     <p class="card-description">${project.description}</p>
-                    <a href="${project.link || '#'}" class="card-link" target="_blank">
-                        Voir le projet
-                        <span class="material-symbols-outlined">arrow_forward</span>
+                    <a href="${project.link || '#'}" class="card-link" target="_blank" ${downloadAttr}>
+                        ${linkText}
+                        <span class="material-symbols-outlined">${linkIcon}</span>
                     </a>
                 </div>
             `;
             projectsGrid.appendChild(article);
         });
 
-        // Ajouter les écouteurs pour la suppression
+        // Attacher les écouteurs pour la suppression des projets
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 const id = this.dataset.id;
-                if(confirm('Voulez-vous vraiment supprimer ce projet ?')) {
+                if (confirm('Voulez-vous vraiment supprimer ce projet réalisé ?')) {
                     deleteProject(id);
                 }
             });
         });
     }
 
-    // Ajouter un projet
+    // Soumission du formulaire d'ajout
     if (projectForm) {
         projectForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const projectData = {
-                title: document.getElementById('title').value,
-                image_url: document.getElementById('imageUrl').value,
-                tags: document.getElementById('tags').value,
-                description: document.getElementById('description').value,
-                link: document.getElementById('link').value
-            };
+            const title = document.getElementById('title').value;
+            const tags = document.getElementById('tags').value;
+            const description = document.getElementById('description').value;
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(projectData)
-                });
+            // Compresser l'image si un fichier est sélectionné
+            const imageFile = imageFileInput.files[0];
+            let compressedImage = null;
+            if (imageFile) {
+                showNotification("Optimisation de la photo en cours...");
+                compressedImage = await compressImage(imageFile, 800, 600, 0.8);
+            }
 
-                if (response.ok) {
-                    projectForm.reset();
-                    projectModal.classList.remove('active');
-                    loadProjects();
+            if (useLocalStorage) {
+                // Mode local storage
+                let imageUrl = imageUrlInput.value || 'https://placehold.co/600x400/0f172a/64ffda?text=Projet';
+                let projectLink = projectLinkInput.value || '#';
+
+                const saveToLocal = (fileData) => {
+                    const newProject = {
+                        id: 'local-' + Date.now(),
+                        title: title,
+                        description: description,
+                        image_url: compressedImage ? compressedImage.dataUrl : imageUrl,
+                        tags: tags,
+                        link: fileData || projectLink
+                    };
+
+                    let localProjects = JSON.parse(localStorage.getItem('portfolio_projects') || '[]');
+                    localProjects.unshift(newProject);
+                    localStorage.setItem('portfolio_projects', JSON.stringify(localProjects));
+                    
+                    finalizeSubmission();
+                };
+
+                // Si un fichier source/projet a été choisi, on le lit en Base64
+                const projectFile = projectFileInput.files[0];
+                if (projectFile) {
+                    showNotification("Traitement du document joint...");
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        saveToLocal(evt.target.result);
+                    };
+                    reader.readAsDataURL(projectFile);
                 } else {
-                    alert('Erreur lors de l\'ajout du projet.');
+                    saveToLocal();
                 }
-            } catch (error) {
-                console.error('Erreur:', error);
+            } else {
+                // Mode serveur (avec FormData pour supporter les téléversements physiques)
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('tags', tags);
+                formData.append('description', description);
+
+                if (compressedImage && compressedImage.blob) {
+                    // Envoyer le fichier JPEG compressé de ~50Ko au lieu du fichier brut de 5Mo !
+                    formData.append('imageFile', compressedImage.blob, 'project_image.jpg');
+                } else {
+                    formData.append('image_url', imageUrlInput.value);
+                }
+
+                const projectFile = projectFileInput.files[0];
+                if (projectFile) {
+                    formData.append('projectFile', projectFile);
+                } else {
+                    formData.append('link', projectLinkInput.value);
+                }
+
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        finalizeSubmission();
+                    } else {
+                        alert('Erreur lors du stockage du projet sur le serveur MySQL.');
+                    }
+                } catch (error) {
+                    console.error('Erreur de requête POST:', error);
+                    alert('Une erreur est survenue lors de l\'envoi vers le serveur.');
+                }
             }
         });
     }
 
+    function finalizeSubmission() {
+        projectForm.reset();
+        if (imagePreview) imagePreview.style.display = 'none';
+        if (imageFileNameDisplay) imageFileNameDisplay.textContent = "Aucun fichier";
+        if (projectFileNameDisplay) projectFileNameDisplay.textContent = "Aucun fichier";
+        projectModal.classList.remove('active');
+        loadProjects();
+        showNotification("Projet stocké avec succès !");
+    }
+
     // Supprimer un projet
     async function deleteProject(id) {
-        try {
-            const response = await fetch(\`\${API_URL}/\${id}\`, { method: 'DELETE' });
-            if (response.ok) {
-                loadProjects();
-            } else {
-                alert('Erreur lors de la suppression.');
+        if (useLocalStorage) {
+            // Mode local storage
+            let localProjects = JSON.parse(localStorage.getItem('portfolio_projects') || '[]');
+            localProjects = localProjects.filter(p => p.id != id);
+            localStorage.setItem('portfolio_projects', JSON.stringify(localProjects));
+            loadProjects();
+            showNotification("Projet local supprimé.");
+        } else {
+            // Mode serveur
+            try {
+                const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    loadProjects();
+                    showNotification("Projet supprimé du serveur MySQL.");
+                } else {
+                    alert('Erreur lors de la suppression sur le serveur.');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la requête de suppression:', error);
             }
-        } catch (error) {
-            console.error('Erreur:', error);
         }
     }
 
     // Modal UI Controls
-    if (btnManage) {
-        btnManage.addEventListener('click', () => projectModal.classList.add('active'));
-    }
-
     if (closeModal) {
         closeModal.addEventListener('click', () => projectModal.classList.remove('active'));
     }
@@ -298,8 +588,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target === projectModal) projectModal.classList.remove('active');
     });
 
-    // Initialisation
-    loadProjects();
+    // Gestion du Formulaire de Contact Direct par E-mail
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            const subject = encodeURIComponent(`Nouveau message de ${name} - Portfolio`);
+            const body = encodeURIComponent(`Bonjour Moussa,\n\nVous avez reçu un nouveau message depuis votre Portfolio.\n\nNom de l'expéditeur : ${name}\nE-mail de l'expéditeur : ${email}\n\nMessage :\n${message}\n\nCordialement,\n${name}`);
+            
+            const mailtoUrl = `mailto:kankanbayo627@mail.com?subject=${subject}&body=${body}`;
+            
+            // Lancer le client e-mail pré-rempli local
+            window.location.href = mailtoUrl;
+            
+            // Vider les champs après l'envoi
+            contactForm.reset();
+        });
+    }
 
+    // Initialisation
+    checkAdminAccess();
+    loadProjects();
 
 });
